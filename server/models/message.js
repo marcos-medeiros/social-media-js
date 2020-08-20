@@ -7,7 +7,4 @@ const messageSchema = new Schema({
     createdAt: { type: Schema.Types.Date, required: true, default: Date() },
 });
 
-module.exports = {
-    Message: model('Message', messageSchema),
-    messageSchema
-};
+module.exports = model('Message', messageSchema);

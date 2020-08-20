@@ -4,13 +4,14 @@ require('dotenv').config();
 // dependencies
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
-const schema = require('./graphql/schema');
+const { GraphQLSchema } = require('graphql');
+const mutation = require('./graphql/mutation');
+const query = require('./graphql/query');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const helmet = require("helmet");
 
 // create app
-var app = express();
+const app = express();
 
 // allow cross-origin requests
 app.use(cors(
@@ -20,19 +21,14 @@ app.use(cors(
   }
 ));
 
-// sets http headers to improve security of requests
-app.use(helmet());
-
 // connect to mongodb database
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // bind express with graphql
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true
-}));
+const schema = new GraphQLSchema({ query, mutation });
+app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
 
 
 // catch 404 and forward to error handler

@@ -1,9 +1,8 @@
 const { Schema, model } = require('mongoose');
 
-const postSchema = new Schema({
-    content: { type: Schema.Types.String, required: true, maxlength: 255 },
+const sessionSchema = new Schema({
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     createdAt: { type: Schema.Types.Date, required: true, default: Date() },
 });
 
-module.exports = model('Post', postSchema);
+module.exports = model('Session', sessionSchema);
