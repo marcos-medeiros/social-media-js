@@ -4,7 +4,9 @@ require('dotenv').config();
 // dependencies
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
-const schema = require('./graphql/schema');
+const { GraphQLSchema } = require('graphql');
+const { query } = require('./graphql/query');
+const { mutation } = require('./graphql/mutation');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -25,6 +27,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // bind express with graphql
+const schema = new GraphQLSchema({ query, mutation });
 app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
 
 // catch 404 and forward to error handler
