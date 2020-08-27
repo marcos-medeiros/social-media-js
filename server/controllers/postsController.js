@@ -2,7 +2,7 @@ const async = require('async');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const Post = require('../models/post');
-const user = require('../models/user');
+const User = require('../models/user');
 
 exports.all = (req, res, next) => {
     Post
