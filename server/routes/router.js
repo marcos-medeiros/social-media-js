@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const passport = require('../auth');
 
-const chatsController = require('../controllers/chatsController');
+const commentsController = require('../controllers/commentsController');
 const friendshipsController = require('../controllers/friendshipsController');
 const postsController = require('../controllers/postsController');
 const usersController = require('../controllers/usersController');
+const likesController = require('../controllers/likesController');
+
 
 // USER
 
@@ -14,8 +16,12 @@ router.post('/users', usersController.create);
 // log in user
 router.post('/login', usersController.login);
 
+// list of all users
+router.get('/users', usersController.all)
+
 // get user details
-router.get('/users', usersController.details);
+router.get('/users/:id', usersController.details);
+
 
 // POST
 
@@ -26,29 +32,43 @@ router.get('/posts', postsController.all);
 router.get('/posts', postsController.create);
 
 // delete post
-router.get('/posts', postsController.delete);
+router.post('/posts/:id', postsController.delete);
 
 
-// CHAT
+// COMMENT
 
-// get chat
+// create comment
+router.post('/comments', commentsController.create);
 
-// send message
+// delete comment
+router.post('/comments/:id', commentsController.delete);
+
+
+// LIKE
+
+// create like
+router.post('/likes', likesController.create);
+
+// delete like
+router.post('/likes/:id',likesController.delete);
 
 
 // FRIENDSHIP
 
-// get friends
+// get list of all friends
+router.get('/friends', friendshipsController.all);
+
+// get requests
+router.get('/requests', friendshipsController.requests);
 
 // create friend request
-
-// get requests sent
-
-// get pending requests
+router.post('/requests', friendshipsController.create);
 
 // accept friendship
+router.post('/requests/:id/accept', friendshipsController.accept);
 
 // decline/delete friendship
+router.post('/requestsp/:id/delete', friendshipsController.delete);
 
 
 module.exports = router;

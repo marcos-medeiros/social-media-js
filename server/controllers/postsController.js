@@ -3,16 +3,8 @@ const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const Post = require('../models/post');
 const User = require('../models/user');
-
-exports.all = (req, res, next) => {
-    Post
-        .find({})
-        .populate('user')
-        .exec((err, posts) => {
-            if (err) next(err);
-            res.json(posts);
-        });
-};
+const Comment = require('../models/comment');
+const Like = require('../models/like');
 
 exports.create = [
     // Validate fields
@@ -46,24 +38,39 @@ exports.create = [
     }
 ];
 
-exports.delete = [
-    // Validate and sanitize fields
-    body('postId').trim().isLength({ min: 1 }).withMessage('Post invalid'),
-    sanitizeBody('*').escape(),
-
-    (req, res, next) => {
-        // Extract the validation errors from a request.
-        const errors = validationResult(req);
-
-        // There are errors so send back the errors.
-        if (!errors.isEmpty()) res.json(errors);
-        else {
-            Post
-                .findOneAndDelete({ user: req.user.id, id: req.body.postId })
-                .exec((err) => {
+exports.all = (req, res, next) => {
+    Post
+        .find({})
+        .populate('user')
+        .exec((err, posts) => {
+            if (err) next(err);
+            for (let i = 0; i < posts.length; i++) {
+                async.parallel({
+                    comments: (callback) => {
+                        Comment
+                            .find({ post: posts[i].id })
+                            .exec(callback);
+                    },
+                    likes: (callback) => {
+                        Like
+                            .find({ post: posts[i].id })
+                            .exec(callback);
+                    }
+                }, (err, results) => {
                     if (err) next(err);
-                    res.end();
-                })
-        }
-    }
-];
+                    posts[i].comments = results.comments;
+                    posts[i].likes = result.likes.length;
+                });
+            }
+            res.json(posts);
+        });
+};
+
+exports.delete = (req, res, next) => {
+    Post
+        .findOneAndDelete({ user: req.user.id, id: req.params.id })
+        .exec((err) => {
+            if (err) next(err);
+            res.end();
+        });
+};

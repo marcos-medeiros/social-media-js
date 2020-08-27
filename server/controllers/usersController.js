@@ -64,17 +64,17 @@ exports.details = (req, res, next) => [
     async.parallel({
         user: (callback) => {
             User
-                .findById(req.body.id)
+                .findById(req.params.id)
                 .exec(callback);
         },
         posts: (callback) => {
             Post
-                .find({ user: req.body.id })
+                .find({ user: req.params.id })
                 .exec(callback);
         },
         friends: (callback) => {
             Friendship
-                .find({ user: req.body.id })
+                .find({ user: req.params.id })
                 .exec(callback);
         }
     }, (err, result) => {
@@ -86,3 +86,25 @@ exports.details = (req, res, next) => [
         });
     })
 ];
+
+exports.all = (req, res, next) => {
+    User
+        .find({})
+        .exec((err, users) => {
+            if (err) next(err);
+            for (let i = 0; i < users; i++) {
+                if (req.user.id === req.params.id) {
+                    users.splice(i, 1);
+                    i--;
+                    continue;
+                }
+                Friendship
+                    .find({ user: req.user.id, friend: users[i].id })
+                    .exec((err, friendship) => {
+                        users.friendshipStatus = friendship ? friendship.status : null;
+                    })
+                res.json(users);
+            }
+        })
+}
+
