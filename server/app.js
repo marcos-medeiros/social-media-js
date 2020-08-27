@@ -3,15 +3,32 @@ require('dotenv').config();
 
 // dependencies
 const express = require('express');
-const { graphqlHTTP } = require('express-graphql');
-const { GraphQLSchema } = require('graphql');
-const { query } = require('./graphql/query');
-const { mutation } = require('./graphql/mutation');
-const mongoose = require('mongoose');
+const session = require("express-session");
+const passport = require('./auth');
+const router = require('./routes/router');
 const cors = require('cors');
+
+
+// connect to mongodb database
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 // create app
 const app = express();
+app.use(express.json());
+
+// setup authentication and session
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// make user object more easily available
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
+});
 
 // allow cross-origin requests
 app.use(cors(
@@ -21,14 +38,8 @@ app.use(cors(
   }
 ));
 
-// connect to mongodb database
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-// bind express with graphql
-const schema = new GraphQLSchema({ query, mutation });
-app.use('/graphql', graphqlHTTP({ schema, graphiql: true }));
+// setup router
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
