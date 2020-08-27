@@ -20,12 +20,13 @@ router.get('/users', usersController.details);
 // POST
 
 // get all posts
-
-// get post details
+router.get('/posts', postsController.all);
 
 // create post
+router.get('/posts', postsController.create);
 
 // delete post
+router.get('/posts', postsController.delete);
 
 
 // CHAT
@@ -38,6 +39,8 @@ router.get('/users', usersController.details);
 // FRIENDSHIP
 
 // get friends
+
+// create friend request
 
 // get requests sent
 

@@ -36,7 +36,7 @@ exports.create = [
             if (!errors.isEmpty()) res.json(errors);
             else {
                 // Data from form is valid.
-                const user = new User({
+                new User({
                     firstName = req.body.firstName,
                     lastName = req.body.lastName,
                     email: req.body.email,
