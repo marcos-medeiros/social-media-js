@@ -37,8 +37,8 @@ exports.create = [
             else {
                 // Data from form is valid.
                 new User({
-                    firstName = req.body.firstName,
-                    lastName = req.body.lastName,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
                     email: req.body.email,
                     password: hash
                 }).save((err, user) => {
@@ -93,7 +93,7 @@ exports.all = (req, res, next) => {
         .exec((err, users) => {
             if (err) next(err);
             for (let i = 0; i < users; i++) {
-                if (req.user.id === req.params.id) {
+                if (req.user.id === users[i].id) {
                     users.splice(i, 1);
                     i--;
                     continue;
