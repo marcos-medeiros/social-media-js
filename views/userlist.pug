@@ -1,0 +1,12 @@
+extends layout
+include _friends
+
+block content
+  .section
+    h1.title.is-4 User List
+    ul
+      - users.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+      for user in users
+        +friend(user)
+
+

@@ -1,0 +1,15 @@
+extends profile_layout
+
+block profileContent
+  if user.equals(locals.currentUser._id) && user.recvFriendRequests.length > 0
+    h2.title.is-4 Friend Requests
+    ul.mb-6
+      for friendRequest in user.recvFriendRequests
+        +friend(friendRequest, true)
+
+  h2.title.is-4 Friends
+  ul
+    for friend, index in user.friends
+      +friend(friend)
+    else
+      p No friends yet. :(
