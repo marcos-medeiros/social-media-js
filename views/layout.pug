@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/css/bulma.min.css")
+    link(rel="stylesheet", href="/css/helpers.css")
+    script(defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js")
+    script(defer src="/js/helpers.js")
+    title Fakebook
+
+  body
+
+    header
+      nav.navbar.is-fixed-top.has-background-black.has-shadow
+        .navbar-brand
+          a.navbar-item.has-text-weight-bold.has-text-white(href="/") Fakebook
+          a.navbar-burger.burger(role="button", data-target="navbarContent")
+            span
+            span
+            span
+        .navbar-menu#navbarContent
+          .navbar-start
+            if locals.currentUser
+              .navbar-item
+                a.mr-2(href="/user/" + currentUser._id) Profile 
+              .navbar-item
+                a.mr-2(href="/user/" + currentUser._id + "/edit") Settings
+              .navbar-item
+                a.mr-2(href="/user/all") Find friends
+          .navbar-end
+            if locals.currentUser
+              .navbar-item
+                a(href="/user/logout") Logout
+            else
+              .navbar-item
+                p Not logged in.
+
+    main.mt-6
+      block content
+
+    footer.footer
+      .content.has-text-centered
+        p #[strong Fakebook] by 
+          a(href="https://github.com/marcos-medeiros") Marcos Medeiros
+          | . 
+        p Source code available on 
+          a(href="https://github.com/marcos-medeiros/social-media-js") GitHub
+          | .
