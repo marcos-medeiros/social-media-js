@@ -1,7 +1,5 @@
 .DS_STORE
-build/
 node_modules
 **.env
 package-lock.json
 Procfile
-build
