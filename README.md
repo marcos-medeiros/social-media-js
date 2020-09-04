@@ -1,8 +1,12 @@
-# ODINBOOK
+# Node.js Fakebook
 
 A Facebook clone made with Node.js/Express and TypeScript.
 
-Final capstone project for [The Odin Project](https://www.theodinproject.com).
+Includes facebook's core features:
+- Posts
+- Comments
+- Likes
+- Friendships
 
 ## How to run
 
